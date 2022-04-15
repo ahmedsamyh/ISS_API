@@ -12,3 +12,14 @@ Simple Project that plots an ISS to a map using leaflet.js and wheretheiss.at AP
                 The marker is a custom drawn icon(i did my best to draw the ISS in pixel art :P) btw i use <a
                     href="https://www.aseprite.org/">aseprite</a> to draw pixel art!
                 The fetch request is called every second using the setInterval function in javascript.
+<p>
+            Resources Used:
+        <ul>
+            <li>
+                <a href="https://wheretheiss.at/" target="_blank">wheretheiss.at</a>
+            </li>
+            <li>
+                <a href="https://leafletjs.com/" target="_blank">leafletjs</a>
+            </li>
+        </ul>
+        </p>
