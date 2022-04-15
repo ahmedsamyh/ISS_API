@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta lang="en">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+    <title>International Space Station API</title>
+    <style>
+        #map {
+            width: 50%;
+            height: 400px;
+            margin: auto;
+            align-items: center;
+            border: 2px solid #0b0a0a
+        }
+
+        body {
+            font-family: monospace;
+            font-size: large
+        }
+
+        #iss_data {
+            text-align: center;
+        }
+
+        span {
+            font-weight: bold;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        #main {
+            padding-left: 5em;
+            padding-right: 5em;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main">
+        <h2>Where is the ISS at?</h2>
+        <p>
+            This website plots the latitude and longitude of the ISS(International Space Station) on a map.
+            This is one of the projects i will make along the way, and soon will host it on my own website! and if you
+            are
+            viewing this from my website, then great!.
+            Thank you for visiting!
+        </p>
+        <br>
+
+        <div id="map"></div>
+
+        <div id="iss_data">
+            <p>
+                latitude: <span id="lat"></span>°<br>
+                longitude: <span id="lon"></span>°<br>
+                velocity: <span id="vel"></span>mph
+            </p>
+        </div>
+
+
+
+        <div>
+            <h4>How It Works:</h4>
+            <p>
+                First i make a fetch request to get the data in the form of json using the API provided from <a
+                    href="https://wheretheiss.at/">wheretheiss.at</a>.
+                Then i use <a href="https://leafletjs.com/">leaflet.js</a> to draw the map to a HTML div element.
+                After i draw the map, i make a use the marker class from the leafletjs library to plot a marker on the
+                map
+                at the latitude and longitude retrieved from wheretheiss.at.
+                The marker is a custom drawn icon(i did my best to draw the ISS in pixel art :P) btw i use <a
+                    href="https://www.aseprite.org/">aseprite</a> to draw pixel art!
+                The fetch request is called every second using the setInterval function in javascript.
+            </p>
+        </div>
+
+        <p>
+            Resources Used:
+        <ul>
+            <li>
+                <a href="https://wheretheiss.at/" target="_blank">wheretheiss.at</a>
+            </li>
+            <li>
+                <a href="https://leafletjs.com/" target="_blank">leafletjs</a>
+            </li>
+        </ul>
+        </p>
+    </div>
+
+    <script>
+        // plot the satellite to a map using leaflet.js
+        const map = L.map('map').setView([51.505, -0.09], 1);
+
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1IjoibW9tb3lvbiIsImEiOiJjbDIweXM0dzYwNnVrM2NtcXRoa2JydnByIn0.bVu41OafFjPwNMAR2xByFg',
+            zoomControl: false,
+            attributionControl: false
+        }).addTo(map);
+
+        var issIcon = L.icon({
+            iconUrl: 'iss.png',
+            iconSize: [64, 64],
+            iconAnchor: [32, 32]
+        });
+
+        const marker = L.marker([0, 0], { icon: issIcon }).addTo(map);
+
+        // get the lan and log from wheretheiss.at api
+        const api_url = 'https://api.wheretheiss.at/v1/satellites/25544';
+        let first_time = true;
+        async function getData() {
+            const xyears = [];
+            const ytemps = [];
+            const response = await fetch(api_url);
+            const data = await response.json();
+            const { latitude, longitude, velocity } = data;
+            marker.setLatLng([latitude, longitude]);
+
+            if (first_time) {
+                map.setView([latitude, longitude], 2);
+                first_time = false;
+            }
+
+            document.getElementById('lat').textContent = latitude;
+            document.getElementById('lon').textContent = longitude;
+            document.getElementById('vel').textContent = velocity;
+        }
+        getData();
+        setInterval(getData, 1000);
+    </script>
+</body>
+
+</html>
