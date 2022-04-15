@@ -26,6 +26,6 @@ Simple Project that plots an ISS to a map using leaflet.js and wheretheiss.at AP
 
 
 <p>
-            This Project is inspired by Daniel Shiffman AKA <a href="https://www.youtube.com/channel/UCvjgXvBlbQiydffZU7m1_aw>The Coding Train"</a>.
+            This Project is inspired by Daniel Shiffman AKA <a href="https://www.youtube.com/channel/UCvjgXvBlbQiydffZU7m1_aw">The Coding Train</a>.
             So be sure to check out his content! He is a great guy! :>
 </p>
